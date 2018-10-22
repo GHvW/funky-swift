@@ -45,8 +45,8 @@ precedencegroup Composition {
 
 infix operator >=> : Composition
 
-public func >=> <T, E, U>(fn1: @escaping (T) -> Result<T, E>, fn2: @escaping (T) -> U) -> (T) -> Result<U, E> {
-    return { val -> Result<U, E> in 
+public func >=> <T, E, U, V>(fn1: @escaping (T) -> Result<U, E>, fn2: @escaping (U) -> V) -> (T) -> Result<V, E> {
+    return { val -> Result<V, E> in 
         switch fn1(val) {
             case Result.Ok(let x):
                 return .Ok(fn2(x))
