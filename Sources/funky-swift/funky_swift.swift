@@ -20,14 +20,15 @@ public func |> <T, U>(val: T, fn: (T) -> U) -> U {
     return fn(val)
 }
 
-precedencegroup Bind {
-    associativity: left
-    higherThan: TernaryPrecedence
-}
+// precedencegroup Bind {
+//     associativity: left
+//     higherThan: TernaryPrecedence
+// }
 
-infix operator |>>= : Bind
+//Bind
+infix operator ||> : ForwardPipe
 
-public func |>>= <T, E, U>(val: Result<T, E>, fn: (T) -> U) -> Result<U, E> {
+public func ||> <T, E, U>(val: Result<T, E>, fn: (T) -> U) -> Result<U, E> {
     switch val {
         case .Ok(let x):
             return .Ok(fn(x))
@@ -36,13 +37,13 @@ public func |>>= <T, E, U>(val: Result<T, E>, fn: (T) -> U) -> Result<U, E> {
     }
 }
 
-
-precedencegroup RocketShip {
+//RocketShip
+precedencegroup Composition {
     associativity: left
-    higherThan: TernaryPrecedence
+    higherThan: ForwardPipe
 }
 
-infix operator >=> : RocketShip
+infix operator >=> : Composition
 
 public func >=> <T, E, U>(fn1: @escaping (T) -> Result<T, E>, fn2: @escaping (T) -> U) -> (T) -> Result<U, E> {
     return { val -> Result<U, E> in 
@@ -55,19 +56,20 @@ public func >=> <T, E, U>(fn1: @escaping (T) -> Result<T, E>, fn2: @escaping (T)
     }
 }
 
-precedencegroup SingleComposition {
-    associativity: left
-    higherThan: TernaryPrecedence
-}
+// precedencegroup SingleComposition {
+//     associativity: left
+//     higherThan: TernaryPrecedence
+// }
 
-infix operator >-> : SingleComposition
+//Single Composition
+infix operator >-> : Composition
 
 public func >-> <T, U, V>(fn1: @escaping (T) -> U, fn2: @escaping (U) -> V) -> (T) -> V {
     return { val -> V in fn2(fn1(val)) }
 }
 
-func add(_ x: Int) -> Int { return x + 5 }
+// func add(_ x: Int) -> Int { return x + 5 }
 
-let vv = 5 |> add
+// let vv = 5 |> add
 
-print(vv)
+// print(vv)
