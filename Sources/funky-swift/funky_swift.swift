@@ -1,7 +1,7 @@
 struct funky_swift {
     var text = "Hello, World!"
 }
-//precedence: higher than logical? x |> y && z |> a needs to evaluate the functions first
+//precedence: higher than logical? x |> y && z |> a needs to edatauate the functions first
 
 public enum Result<T, U> {
     case Ok(T)
@@ -16,8 +16,8 @@ precedencegroup ForwardPipe {
 
 infix operator |> : ForwardPipe
 
-public func |> <T, U>(val: T, fn: (T) -> U) -> U {
-    return fn(val)
+public func |> <T, U>(data: T, fn: (T) -> U) -> U {
+    return fn(data)
 }
 
 
@@ -42,7 +42,7 @@ precedencegroup Composition {
 infix operator >-> : Composition
 
 public func >-> <T, U, V>(fn1: @escaping (T) -> U, fn2: @escaping (U) -> V) -> (T) -> V {
-    return { val -> V in fn2(fn1(val)) }
+    return { data -> V in fn2(fn1(data)) }
 }
 
 
@@ -50,7 +50,7 @@ public func >-> <T, U, V>(fn1: @escaping (T) -> U, fn2: @escaping (U) -> V) -> (
 infix operator >=> : Composition
 
 public func >=> <T, E, U, V>(fn1: @escaping (T) -> Result<U, E>, fn2: @escaping (U) -> Result<V, E>) -> (T) -> Result<V, E> {
-    return { val in
-        fn1(val) ||> fn2
+    return { data in
+        fn1(data) ||> fn2
     }
 }
